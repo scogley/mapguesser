@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Bing Maps Guesser</h2>
+
+<p>Can you guess where in the world you are?</p>
+
+<p id="demo"></p>
+<div id="myMap1" style='position:relative;width:900px;height:600px;'></div>
+<h4>Right-Click map to drop a pin to guess. Click Submit Guess button when ready.</h4>
+<p id="distanceBetweenResult"></p>
+<button type="button" onclick="SubmitGuess()">Submit Guess</button>
+<div id="myMap2" style='position:relative;width:600px;height:400px;'></div>
+
+<script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AmGhv1cZ00xjOFhQIV9k67LBC-IDemiK_eUZAPEQyK1O01hbf8QldTp-Y58HeqEW' async defer>
+</script>
+
+<script>
+// declare global vars
+var map1;
+var map2;
+var pushpin1;
+var pushpin2;
+var mouseClickHandler;
+
+window.onload=Main;
+
+function Main() {
+    LoadMap1();
+    LoadMap2();    
+}
+
+function LoadMap1(){
+map1 = new Microsoft.Maps.Map(document.getElementById('myMap1'), {
+            /* No need to set credentials if already passed in URL */
+            mapTypeId: Microsoft.Maps.MapTypeId.streetside,
+            zoom: 18,
+            center: new Microsoft.Maps.Location(47.6197, -122.3489)
+        });
+        map1.setOptions({
+            streetsideOptions: {
+                overviewMapMode: Microsoft.Maps.OverviewMapMode.hidden,
+                showCurrentAddress: false,
+                showProblemReporting: false,
+                showExitButton: false,
+                disablePanoramaNavigation: false,
+                showHeadingCompass: true,
+                showZoomButtons: false
+            }
+        });
+}
+function LoadMap2(){
+    map2 = new Microsoft.Maps.Map(document.getElementById('myMap2'), {});
+    mouseClickHandler = Microsoft.Maps.Events.addHandler(map2, 'rightclick', function (e) { handleArgs('mapRightclick', e); });
+}
+
+
+function handleArgs(id, e) {
+    console.log('hello world');
+    console.log(e.isSecondary);
+    console.log(e.location);
+    // drop a pin on the user's right click map location
+    //DropPin(pushpin1, e.location);
+    pushpin1 = new Microsoft.Maps.Pushpin(e.location, {title: 'Guess', color: '#0f0', draggable: true});
+    map2.entities.push(pushpin1);
+    Microsoft.Maps.Events.removeHandler(mouseClickHandler);
+}
+
+function SubmitGuess(){
+    // drop the actual location pin
+    answerLocation = new Microsoft.Maps.Location(47.6197, -122.3489)
+    //DropPin(pushpin2, answerLocation);
+    pushpin2 = new Microsoft.Maps.Pushpin(answerLocation, {title: 'Target', color: '#f00'});
+    map2.entities.push(pushpin2); 
+    GetDistanceBetweenPoints(pushpin1.getLocation(), pushpin2.getLocation());
+    DrawLineBetweenPoints(pushpin1.getLocation(), pushpin2.getLocation());
+    //document.getElementById("button").disabled = true;
+}
+
+function GetDistanceBetweenPoints(location1, location2) {
+    console.log("entering distanceBetweenPoints function");
+    console.log("Guess  location: " + location1);
+    console.log("Target location: " + location2);
+    Microsoft.Maps.loadModule('Microsoft.Maps.SpatialMath', function () {
+
+        var distanceBetween = Microsoft.Maps.SpatialMath.getDistanceTo(location1, location2, Microsoft.Maps.SpatialMath.DistanceUnits.Miles);
+
+        console.log("distance between " + distanceBetween);
+        document.getElementById('distanceBetweenResult').innerHTML = '<b>Distance from target (miles)</b><br> '
+            + distanceBetween;
+            });
+}
+
+function DrawLineBetweenPoints(location1, location2){
+    var polyline = new Microsoft.Maps.Polyline([location1, location2], {strokeThickness: 3});
+    map2.entities.push(polyline);
+}
+
+</script>
+
+</body>
+</html>
