@@ -10,7 +10,7 @@
 <div id="myMap1" style='position:relative;width:900px;height:600px;'></div>
 <h4>Right-Click map to drop a pin to guess. Click Submit Guess button when ready.</h4>
 <p id="distanceBetweenResult"></p>
-<button type="button" onclick="SubmitGuess()">Submit Guess</button>
+<button name="submit_btn" type="button" onclick="SubmitGuess()">Submit Guess</button>
 <div id="myMap2" style='position:relative;width:600px;height:400px;'></div>
 
 <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AmGhv1cZ00xjOFhQIV9k67LBC-IDemiK_eUZAPEQyK1O01hbf8QldTp-Y58HeqEW' async defer>
@@ -74,8 +74,11 @@ function SubmitGuess(){
     pushpin2 = new Microsoft.Maps.Pushpin(answerLocation, {title: 'Target', color: '#f00'});
     map2.entities.push(pushpin2); 
     GetDistanceBetweenPoints(pushpin1.getLocation(), pushpin2.getLocation());
-    DrawLineBetweenPoints(pushpin1.getLocation(), pushpin2.getLocation());
-    //document.getElementById("button").disabled = true;
+    DrawLineBetweenPoints(pushpin1.getLocation(), pushpin2.getLocation());    
+    // Disable the submit button
+    document.getElementsByName("submit_btn")[0].disabled = true;
+    // Disable draggable property of the Guess pushPin
+    pushpin1.setOptions({draggable: false});
 }
 
 function GetDistanceBetweenPoints(location1, location2) {
