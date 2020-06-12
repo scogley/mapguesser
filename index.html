@@ -90,8 +90,14 @@ function GetDistanceBetweenPoints(location1, location2) {
         var distanceBetween = Microsoft.Maps.SpatialMath.getDistanceTo(location1, location2, Microsoft.Maps.SpatialMath.DistanceUnits.Miles);
 
         console.log("distance between " + distanceBetween);
-        document.getElementById('distanceBetweenResult').innerHTML = '<b>Distance from target (miles)</b><br> '
+        if(distanceBetween < 0.01){
+        document.getElementById('distanceBetweenResult').innerHTML = '<b>Perfect! 100 points. Distance from target (miles)</b><br> '
             + distanceBetween;
+        }
+        else{
+            document.getElementById('distanceBetweenResult').innerHTML = '<b>Distance from target (miles)</b><br> '
+            + distanceBetween;
+        }
             });
 }
 
