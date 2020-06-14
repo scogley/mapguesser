@@ -23,12 +23,25 @@ var map2;
 var pushpin1;
 var pushpin2;
 var mouseClickHandler;
+var locations = [];
+var targetLocation;
 
 window.onload=Main;
 
 function Main() {
+    GetTargetLocation();
     LoadMap1();
     LoadMap2();    
+}
+
+function GetTargetLocation(){
+    locations.push(new Microsoft.Maps.Location(47.6197, -122.3489)); // Space Needle Seattle, WA
+    locations.push(new Microsoft.Maps.Location(48.8578, 2.2952)); // Eiffel Tower Paris, france
+    locations.push(new Microsoft.Maps.Location(51.5009, -0.1245));  // Big Ben London, Englad
+    // get a random location from the array. returns 0 - n int
+    var random_index = Math.floor(Math.random() * 3);
+    targetLocation = locations[random_index];
+    console.log("target location " + targetLocation);
 }
 
 function LoadMap1(){
@@ -36,7 +49,7 @@ map1 = new Microsoft.Maps.Map(document.getElementById('myMap1'), {
             /* No need to set credentials if already passed in URL */
             mapTypeId: Microsoft.Maps.MapTypeId.streetside,
             zoom: 18,
-            center: new Microsoft.Maps.Location(47.6197, -122.3489)
+            center: targetLocation
         });
         map1.setOptions({
             streetsideOptions: {
@@ -69,9 +82,7 @@ function handleArgs(id, e) {
 
 function SubmitGuess(){
     // drop the actual location pin
-    answerLocation = new Microsoft.Maps.Location(47.6197, -122.3489)
-    //DropPin(pushpin2, answerLocation);
-    pushpin2 = new Microsoft.Maps.Pushpin(answerLocation, {title: 'Target', color: '#f00'});
+    pushpin2 = new Microsoft.Maps.Pushpin(targetLocation, {title: 'Target', color: '#f00'});
     map2.entities.push(pushpin2); 
     GetDistanceBetweenPoints(pushpin1.getLocation(), pushpin2.getLocation());
     DrawLineBetweenPoints(pushpin1.getLocation(), pushpin2.getLocation());    
