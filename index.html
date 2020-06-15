@@ -36,10 +36,11 @@ function Main() {
 
 function GetTargetLocation(){
     locations.push(new Microsoft.Maps.Location(47.6197, -122.3489)); // Space Needle Seattle, WA
+    locations.push(new Microsoft.Maps.Location(37.8277, -122.4795)); // Golden Gate Bridge San Francisco, CA 
     locations.push(new Microsoft.Maps.Location(48.8578, 2.2952)); // Eiffel Tower Paris, france
     locations.push(new Microsoft.Maps.Location(51.5009, -0.1245));  // Big Ben London, Englad
     // get a random location from the array. returns 0 - n int
-    var random_index = Math.floor(Math.random() * 3);
+    var random_index = Math.floor(Math.random() * 4);
     targetLocation = locations[random_index];
     console.log("target location " + targetLocation);
 }
@@ -70,11 +71,7 @@ function LoadMap2(){
 
 
 function handleArgs(id, e) {
-    console.log('hello world');
-    console.log(e.isSecondary);
-    console.log(e.location);
-    // drop a pin on the user's right click map location
-    //DropPin(pushpin1, e.location);
+    // drop a pin on the user's right click map location    
     pushpin1 = new Microsoft.Maps.Pushpin(e.location, {title: 'Guess', color: '#0f0', draggable: true});
     map2.entities.push(pushpin1);
     Microsoft.Maps.Events.removeHandler(mouseClickHandler);
